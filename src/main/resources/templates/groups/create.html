@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Group - SplitEase</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <!-- Floating Decorative Objects -->
+    <div class="floating-objects">
+        <div class="floating-object circle small primary"></div>
+        <div class="floating-object hexagon medium success pulse"></div>
+        <div class="floating-object square small warning"></div>
+        <div class="floating-object circle large primary spin"></div>
+        <div class="floating-object hexagon small success"></div>
+        <div class="floating-object square medium primary pulse"></div>
+        <div class="floating-object circle medium warning"></div>
+        <div class="floating-object hexagon small primary"></div>
+    </div>
+
+    <div class="page-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="container">
+                <a th:href="@{/dashboard}" class="navbar-brand">
+                    <div class="logo">SE</div>
+                    <span>SplitEase</span>
+                </a>
+                <ul class="navbar-nav">
+                    <li><a th:href="@{/dashboard}">Dashboard</a></li>
+                    <li><a th:href="@{/groups}" class="active">Groups</a></li>
+                </ul>
+                <div class="user-menu">
+                    <div class="user-avatar"
+                        th:text="${userName != null ? userName.substring(0, 2).toUpperCase() : 'U'}">JD</div>
+                    <span th:text="${userName}">User</span>
+                    <a th:href="@{/logout}" class="btn btn-ghost btn-sm" style="margin-left: 0.25rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <polyline points="16 17 21 12 16 7" />
+                            <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container" style="max-width: 600px;">
+                <!-- Alerts -->
+                <div th:if="${error}" class="alert alert-error">
+                    <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="15" y1="9" x2="9" y2="15" />
+                        <line x1="9" y1="9" x2="15" y2="15" />
+                    </svg>
+                    <span th:text="${error}">Error message</span>
+                    <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+                </div>
+
+                <!-- Page Header -->
+                <div style="margin-bottom: 2rem;">
+                    <a th:href="@{/groups}" class="text-secondary d-flex align-center gap-1"
+                        style="margin-bottom: 1rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="19" y1="12" x2="5" y2="12" />
+                            <polyline points="12 19 5 12 12 5" />
+                        </svg>
+                        Back to Groups
+                    </a>
+                    <h1>Create a New Group</h1>
+                    <p class="text-secondary">Set up a group to track shared expenses</p>
+                </div>
+
+                <!-- Create Form -->
+                <div class="card">
+                    <form th:action="@{/groups}" method="post" th:object="${groupDTO}">
+                        <div class="form-group">
+                            <label class="form-label" for="name">Group Name *</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                placeholder="e.g., Roommates, Weekend Trip" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="description">Description</label>
+                            <input type="text" class="form-control" id="description" name="description"
+                                placeholder="What's this group for?">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="memberEmails">Add Members (Optional)</label>
+                            <input type="text" class="form-control" id="memberEmails" name="memberEmails"
+                                placeholder="Enter emails separated by commas">
+                            <small class="text-muted" style="display: block; margin-top: 0.5rem;">
+                                You can add more members later. You are automatically added as a member.
+                            </small>
+                        </div>
+
+                        <!-- Available Users -->
+                        <div style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
+                            <p class="text-secondary" style="font-size: 0.875rem; margin-bottom: 0.75rem;">
+                                Registered users you can add:
+                            </p>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                <button type="button" th:each="user : ${allUsers}" th:if="${user.id != userId}"
+                                    class="badge badge-primary" style="cursor: pointer; border: none;"
+                                    th:text="${user.email}" th:onclick="|addEmailToInput('${user.email}')|">
+                                    user@example.com
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2" style="margin-top: 1.5rem;">
+                            <a th:href="@{/groups}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary" style="flex: 1;">
+                                Create Group
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script th:src="@{/js/app.js}"></script>
+</body>
+
+</html>
