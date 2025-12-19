@@ -115,7 +115,11 @@
                             <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
                                 <button type="button" th:each="user : ${allUsers}" th:if="${user.id != userId}"
                                     class="badge badge-primary" style="cursor: pointer; border: none;"
-                                    th:text="${user.email}" th:onclick="|addEmailToInput('${user.email}')|">
+<button
+    data-username="${user.name}"
+    onclick="addMember(this.dataset.username)">
+    Add
+</button>
                                     user@example.com
                                 </button>
                             </div>
